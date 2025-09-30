@@ -21,7 +21,7 @@ head(Depth)
 Data_party <- Cond %>% #making a new dataframe using the Cond data
   mutate(date = round_date(mdy_hms(date), "10 seconds")) %>% #using mutate to create a new column with the correct date, naming it "date"
                                                               #in the previous line I also rounded it to the nearest 10 seconds and converted it into the proper format at the same time
-  inner_join(Depth, by = "date") %>% #used the inner_join function to combine the Cond data and the Depth data by date and only keeping what both share, anything not shared is excluded
+  inner_join(Depth) %>% #used the inner_join function to combine the Cond data and the Depth data, inner join ensures only what is shared by both is kept
   mutate(date = round_date(date, unit = "minute")) %>% #once they are joined I rounded the dates to the nearest minute rather than second
   mutate(day = round_date(date, unit = "day")) %>% #used mutate to create a new column for just day so I could take the average date, was a little confused why we need average day but trying to follow the homework instructions
   group_by(date) %>% #grouping everything by the date column which is now rounded to the minute to average everything
@@ -29,7 +29,7 @@ Data_party <- Cond %>% #making a new dataframe using the Cond data
     avg_depth = mean(Depth, na.rm = TRUE), #making a column for average depth by the date rounded to the minute
     avg_temperature = mean(Temperature, na.rm = TRUE), #same as above for temp
     avg_salinity = mean(Salinity, na.rm = TRUE), #same as above for salinity
-    avg_date = mean(day, na.rm = TRUE)) #same as above for date
+    avg_date = mean(day, na.rm = TRUE)) #same as above for date, now the dataframe Data_party is all columns of averages of each variable by minute
     
 
 ggplot(data = Data_party, #using my new dataset with the means of the values
