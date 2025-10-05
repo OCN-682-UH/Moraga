@@ -1,0 +1,35 @@
+---
+title: "My First Quarto"
+author: "Jacquin Moraga"
+date: today
+format: 
+  html:
+    toc: true
+    theme: cosmo
+---
+
+## Intro to Quarto
+This is my first *Quarto* document and it's gonna be lit
+
+## Load Library
+```{r}
+#| message: false
+#| warning: false
+
+library(tidyverse)
+library(palmerpenguins)
+library(here)
+```
+## Look at the Data
+```{r}
+glimpse(penguins)
+```
+## Make a Plot
+This is looking at the relationship between **Bill Length** and **Bill Depth**
+```{r}
+#| warning: false
+penguins %>%
+  ggplot(aes(x = bill_length_mm, y = bill_depth_mm, color = species))+
+  geom_point()
+```
+
