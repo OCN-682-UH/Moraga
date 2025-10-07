@@ -3,7 +3,7 @@ title: "Week 06 Homework"
 author: "Jacquin Moraga"
 date: today
 format: gfm
-perfer-html: true
+prefer-html: true
 knitr:
   opts_chunk: 
     fig.path: "../output/"
@@ -30,6 +30,7 @@ Here are the various libraries that I used in order to create my figures and tab
 library(tidyverse) #loads the libraries we are using
 library(kableExtra)
 library(here)
+library(webshot2)
 
 ```
 
