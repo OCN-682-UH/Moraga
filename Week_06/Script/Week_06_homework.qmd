@@ -1,0 +1,111 @@
+---
+title: "Week 06 Homework"
+author: "Jacquin Moraga"
+date: today
+format: gfm
+perfer-html: true
+knitr:
+  opts_chunk: 
+    fig.path: "../output/"
+html:
+    toc: true
+    theme: solar
+---
+
+## Welcome
+
+Welcome to my Quarto document, made for the **Week 06** homework assignment for the OCN 682 Class.
+
+I will be using the **Maunalua Bay Chemical Data** for this assignment.
+
+
+## Load Libraries
+
+Here are the various libraries that I used in order to create my figures and tables
+
+```{r}
+#| warning: false
+#| message: false
+
+library(tidyverse) #loads the libraries we are using
+library(kableExtra)
+library(here)
+
+```
+
+
+## Load Data
+
+Here is where I loaded the data and renamed it to be **"MBay"**
+
+```{r}
+#| warning: false
+#| message: false
+
+MBay <- read_csv(here("Week_06", "Data", "chemicaldata_maunalua.csv")) #reads the csv file we are using and names it to a data sheet called "MBay"
+```
+
+Lets take a look at the data to see what were working with before we start
+
+```{r}
+glimpse(MBay) # looks at the beggining of the data sheet
+```
+Looks beautiful, in this data set we will be specifically looking at:
+
+* Salinity
+* Submarine groundwater discharge (percent_sgd)
+* Sample collection zones (Zones)
+* Collection locations (Site)
+
+Lets get started making that plot.
+
+
+## Making a Plot
+
+Here is where I will be making a plot using the data above.
+
+```{r}
+#| warning: false
+#| out-width: "70%"
+#| fig-align: "center"
+#| label: fig-salt
+#| fig-cap: "This figure visualizes the salinity of the ocean water with relation to surface groundwater percent."
+
+MBay %>% #uses the MBay data sheet we made
+  drop_na() %>% #gets rid of all NA values
+  ggplot(aes(x = percent_sgd, y = Salinity, color = Zone)) + #creates a plot with percent sgd on the x axis and salinity on the Y. The colors of the plot are by zone
+  geom_point(size = 1.5, alpha = .6) + #makes a point plot with adjusted point sizes
+  facet_grid(~Site) + #makes a faceted plot that is split by Site
+  labs( title = "Salinity near SGD in Maunalua Bay",
+        x = "Percent Submarine Groundwater Discharge",
+        y = "Salinity (ppt)",
+        alpha = "Collection Zone") + #added titles and labels to different parts of the graph
+  theme_light()+ #added the light theme
+  theme(axis.title = element_text(size = 10),
+        title = element_text(size = 15),
+        legend.title = element_text(size = 10),
+        legend.text = element_text(size = 8)) #changed the text sizes for the titles
+
+```
+
+When looking @fig-salt you can see there is an inverse relationship between salinity and percent surface groundwater discharge. It is also apparent that *Site W* has a greater range of percent surface groundwater and a higher maximum percent.
+
+
+## Making a Table
+
+Now lets make a cool looking table to go with the Plot that we made.
+
+```{r}
+#| label: tbl-salt
+#| tbl-cap: "This is a table showing the means of salinity and surface groundwater discharge by collection zone"
+
+MBay %>% #uses the MBay data sheet
+  drop_na() %>% #gets rid of all NA values
+  group_by(Zone) %>% #grouping the data by Zonee
+  summarize(Salinity_Mean = mean(Salinity, na.rm = TRUE), #creates a new column for Salinity and sgd with the mean of each per zone
+            SGD_Mean = mean(percent_sgd, na.rm = TRUE)) %>%
+  kbl() %>% #creates a kabel table
+  kable_styling(full_width = FALSE) #limits the width of the table from being across the whole page
+```
+
+@tbl-salt has information showing the average salinity and percent submarine groundwater discharge by collection zone in Maunalua Bay.
