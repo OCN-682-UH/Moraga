@@ -21,7 +21,7 @@ I will be using the **Maunalua Bay Chemical Data** for this assignment.
 
 ## Load Libraries
 
-Here are the various libraries that I used in order to create my figures and tables
+Here are the various libraries that I used in order to create my figures and tables.
 
 ```{r}
 #| warning: false
@@ -37,7 +37,7 @@ library(webshot2)
 
 ## Load Data
 
-Here is where I loaded the data and renamed it to be **"MBay"**
+Here is where I loaded the data and renamed it to be **"MBay"**.
 
 ```{r}
 #| warning: false
