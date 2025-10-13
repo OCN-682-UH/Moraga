@@ -1,0 +1,103 @@
+---
+title: "Week_07a"
+author: "Jacquin Moraga"
+format: html
+---
+
+# Load Libraries
+
+```{r}
+#| warning: false
+#| message: false
+
+library(tidyverse)
+library(here)
+library(maps)
+library(mapdata)
+library(mapproj)
+```
+
+
+# Load Data
+
+```{r}
+#| message: false
+popdata <- read_csv(here("Week_07", "Data", "CAPopdata.csv"))
+
+stars <- read_csv(here("Week_07", "Data", "stars.csv"))
+
+world <- map_data("world")
+
+usa <- map_data("usa")
+
+italy <- map_data("italy")
+
+states <-map_data("state")
+
+counties <- map_data("county")
+
+
+```
+
+
+# Za WORDLO
+
+```{r}
+#| warning: FALSE
+#| message: false
+
+ggplot()+
+  geom_polygon(data = world, aes(x = long, y = lat,
+                                 group = group, fill = region),
+               color = "black") +
+  guides(fill = FALSE)+
+  theme_minimal()+
+  theme(panel.background = element_rect(fill =  "lightblue"))+
+  coord_map(projection = "orthographic",
+            xlim = c(-180,180))
+```
+
+
+# CALIferna
+
+```{r}
+#| warning: FALSE
+#| message: FALSE
+
+
+ca_data <- states %>%
+  filter(region == "california")
+
+  ggplot(ca_data)+
+  geom_polygon(aes(x = long, y = lat,
+               group = group),color = "black", fill = "blue")+
+                 theme_minimal()
+```
+
+
+```{r}
+
+CApop_county <- popdata %>%
+  select("subregion" = County, Population) %>%
+  inner_join(counties) %>%
+  filter(region == "california")
+
+ggplot()+
+  geom_polygon(data = CApop_county,
+               aes(x = long,
+                   y = lat,
+                   group = group,
+                   fill = Population),
+               color = "black") +
+  geom_point(data = stars,
+             aes(x = long,
+                 y = lat,
+                 size = star_no))+
+  coord_map()+
+  theme_minimal()+
+  scale_fill_gradient(trans = "log10")+
+  labs(size = "# of stars/ m2")
+ggsave(here("Week_07","Output","Stars in Cali.pdf"))
+
+```
+

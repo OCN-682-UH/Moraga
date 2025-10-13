@@ -1,0 +1,56 @@
+---
+title: "Week_07b"
+author: "Jacquin Moraga"
+format: html
+---
+
+```{r}
+#| warning: false
+#| message: false
+
+library(ggmap)
+library(tidyverse)
+library(here)
+library(ggspatial)
+```
+
+
+```{r}
+Oahu <- get_map("Oahu")
+
+ggmap(Oahu)
+```
+
+
+```{r}
+#how to map a specific part of Oahu
+WP<-data.frame(lon = -157.7621, lat = 21.27427) # coordinates for Wailupe
+
+Map1<-get_map(WP,zoom = 17) #how to zoom in and to what degree the zoom is
+
+
+ggmap(Map1)
+
+```
+
+```{r}
+#how to map a specific part of Oahu
+WP<-data.frame(lon = -157.7621, lat = 21.27427) # coordinates for Wailupe
+
+ChemData <- read.csv(here("Week_07","Data","chemicaldata_maunalua.csv"))
+
+Map1<-get_map(WP,zoom = 17, maptype = "satellite") #makes it a satellite image foe better clarity
+
+ggmap(Map1)+
+  geom_point(data = ChemData,
+             aes(x = Long, y = Lat, color = Salinity),
+             size = 4) +
+  scale_color_viridis_c()+
+  annotation_scale( bar_cols = c("yellow", "white"),
+                    location = "bl")+ # put the bar on the bottom left and make the colors yellow and white
+  annotation_north_arrow(location = "br")+ # add a north arrow
+  coord_sf(crs = 4326) # for the scale bar to work it needs to be in this coordinate system - this is a typical coordinate reference system for a GPS (WGS84)
+
+
+```
+

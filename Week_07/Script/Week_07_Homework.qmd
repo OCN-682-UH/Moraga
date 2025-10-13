@@ -1,0 +1,92 @@
+---
+title: "Week_07_Homework"
+author: "Jacquin Moraga"
+format:
+  html:
+    theme: solar
+---
+
+## Welcome
+
+Welcome to my Quarto document, made for the **Week 07** homework assignment for the OCN 682 Class. This week we are focusing on how to create maps that aid creating visual representations of our data.
+
+I will be using the **Meteorite Data** for this assignment.
+
+
+## Load Libraries
+
+Here are the various libraries that I used in order to create my figures and tables.
+
+```{r}
+#| warning: false
+#| message: false
+
+library(ggmap)
+library(tidyverse)
+library(here)
+library(ggspatial)
+```
+
+
+## Load Data
+
+Here is where I will be loading the **Meteorite Data** to be used in my map making. For this map I will be filtering to just have meteorites found after the year 200 as well as meteorites over the size of 100 g since those under are too small for my liking.
+
+```{r}
+#| warning: false
+#| message: false
+
+meteorites <- readr::read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2019/2019-06-11/meteorites.csv") 
+#reading in the meteorite data from the Tidy Tuesday on Github
+
+meteorites_recent <- meteorites %>% #filtering out meteors under 100 g and landed before the 2000's
+  filter(year > 2000) %>%
+  filter(mass > 100)
+
+
+
+
+```
+
+
+## Making a Map
+
+Here is where I will be making a map using the data above focusing on the North American Continent rather than the whole world for better clarity of the data and uniqueness of the map.
+
+```{r}
+#| warning: false
+#| message: false
+#| fig-align: "center"
+#| label: fig-spacerock
+#| fig-cap: "This figure displays all recorded large meteorites that have landed in North America after the year 2000."
+
+North_America <- get_map(location = c(lon = -95, lat = 38.7946), zoom = 4) 
+#creating the map using Google so that it is focused on North America
+
+ggmap(North_America)+ #using the above values for the map to be of just North America
+  geom_point(data = meteorites_recent,
+             aes(x = long,
+             y = lat,
+             size = mass,
+             color = year))+ #using the filtered meteorite data and making point size by mass and the color of each point by the year it landed
+  scale_color_viridis_c(option = "plasma")+ #found this cool color scale for the year (which is also colorblind friendly I think)
+  annotation_scale( bar_cols = c("black", "white"), #wanted to put in a scale bar since it is applicable for determining distances between meteorites
+                    location = "bl")+ #putting it in the bottom left since it doesn't cover anything there
+  coord_sf(crs = 4326)+ # using this thing that makes it work
+  labs(title = "Meteorites in North America",
+    size = "Mass of meteorite (g)",
+       color = "Year Landed",
+       x = "Longitude",
+       y = "Latitude")+ #giving titles to my map, axis, and legends
+  theme(axis.title = element_text(size = 8),
+        axis.text = element_text(size = 6),
+        legend.title = element_text(size = 8),
+        legend.text = element_text(size = 6)) #adjusts the font sizes of the text on my map
+  
+  ggsave(here("Week_07","Output","Meteorite_Map.png")) #saves my map to my output folder
+  
+
+
+```
+
+Looking at @fig-spacerock we can see that most meteorites appear to be similar is mass but range across what years they landed in. It also appears that most discovered meteorites have landed in the Western half of the continent.
