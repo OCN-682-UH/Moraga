@@ -8,7 +8,7 @@ format:
 
 ## Welcome
 
-Welcome to my Quarto document, made for the **Week 07** homework assignment for the OCN 682 Class. This week we are focusing on how to create maps that aid creating visual representations of our data.
+Welcome to my Quarto document, made for the **Week 07** homework assignment for the OCN 682 Class. This week we are focusing on how to create maps that help create visual representations of our data.
 
 I will be using the **Meteorite Data** for this assignment.
 
@@ -30,7 +30,7 @@ library(ggspatial)
 
 ## Load Data
 
-Here is where I will be loading the **Meteorite Data** to be used in my map making. For this map I will be filtering to just have meteorites found after the year 200 as well as meteorites over the size of 100 g since those under are too small for my liking.
+Here is where I will be loading the **Meteorite Data** to be used in my map making. For this map I will be filtering to just have meteorites found after the year 2000 as well as meteorites over the size of 100 g since those under are too small for my liking.
 
 ```{r}
 #| warning: false
