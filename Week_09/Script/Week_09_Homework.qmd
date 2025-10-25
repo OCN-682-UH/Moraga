@@ -1,0 +1,70 @@
+---
+title: "Week_09_Homework"
+author: "Jacquin Moraga"
+format: html
+---
+
+## Load Libraries
+
+Keeping it simple today
+```{r}
+#| warning: false
+#| message: false
+
+library(tidyverse)
+library(here)
+library(forcats)
+```
+
+
+## Load Data
+
+Using the Intertidal Data for making the plot
+
+```{r}
+#| warning: false
+#| message: false
+
+intertidal <- read_csv(here("Week_09","Data","intertidaldata.csv"))
+
+view(intertidal)
+```
+
+
+## Time to make a plot!
+
+I wanted to make a bar graph to represent this data becuase I feel this is a goof type of plot to help visualize non-continuous data. I have seen bar graphs sued for intertidal data before which helped solidify my descision.
+
+```{r}
+#| warning: false
+#| message: false
+
+sessile <- intertidal %>%
+  pivot_longer(cols = 'Mussels':'Anemone',
+               names_to = "Sessile",
+               values_to = "Counts") %>% #made the data in the long format so it was easier to work with
+  mutate(zone = factor(Quadrat, levels = c("Low", "Mid", "High"))) #mutating the zones into factors so that they could be plotted on the x axis
+
+sessile %>% #using this new data set I made
+  drop_na() %>% #no NA's because that makes a whole new column
+  ggplot(aes(x = zone, y = Counts, fill = Sessile)) + #setting the parameters for my bar graph to be the correct columns
+  geom_bar(stat = "identity", position = "fill") + #we doin a bar graph cuz its my new fav, filling it by organism type
+  scale_y_continuous(labels = scales::percent_format()) + #turning the y axis into percentages because I originally thought that was what the data was and then I jsut liked it so I kept it
+  scale_fill_viridis_d(option = "C") + #groovy colors
+  labs(title = "Sessile Organisms Coverage of Intertidal Zones",
+       subtitle = "Coverage by Different Intertidal Zones",
+       x = "Zone",
+       y = "Percent", 
+       fill = "Organism") + #giving things titles so we know what's what
+  theme_bw() + #my fav theme
+  theme(plot.title = element_text(size = 14),
+        plot.subtitle = element_text(size = 12),
+        axis.title.x = element_text(size = 10),
+        axis.title.y = element_text(size = 10),
+        legend.title = element_text(size = 10)) #making the text the sizes I like
+
+ggsave(here("Week_09","Output","Homework_09_Plot.png"))
+
+```
+
+BEHOLD the most beautiful plot ever made.

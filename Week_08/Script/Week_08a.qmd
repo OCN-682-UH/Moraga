@@ -1,0 +1,154 @@
+---
+title: "Week_08a"
+author: "Jacquin Moraga"
+format: html
+---
+
+## Load Libraries
+
+```{r}
+#| warning: false
+#| message: false
+
+library(here)
+library(tidyverse)
+library(tidytext)
+library(janeaustenr)
+library(wordcloud2)
+```
+
+## Load Data
+
+```{r}
+#| warning: false
+#| message: false
+```
+
+## Data Analysis
+
+```{r}
+#| warning: false
+#| message: false
+
+#manipulation
+
+paste("High Temp", "Low pH") #combines the two
+
+paste("High Temp", "Low pH", sep = "-") #combines the two with a - separating them
+
+shapes <- c("Square", "Circle", "Triangle")
+paste("My favorite shape is a", shapes)
+
+str_length(shapes) #how many letters are in each word
+
+seq_data<-c("ATCCCGTC")
+str_sub(seq_data, start = 2, end = 4) # extract the 2nd to 4th AA
+
+str_sub(seq_data, start = 3, end = 3) <- "A" # add an A in the 3rd position
+seq_data
+
+str_dup(seq_data, times = c(2, 3)) # times is the number of times to duplicate each string
+
+
+
+#Whitespace
+
+badtreatments<-c("High", " High", "High ", "Low", "Low") #there is space after the third "high"
+badtreatments
+
+str_trim(badtreatments) #removes the space in the third high
+
+str_trim(badtreatments, side = "left") #only removes spaces from left side
+
+str_pad(badtreatments, 5, side ="right") #adds white space to the right side to make sure each word is 5 characters long
+
+str_pad(badtreatments, 5, side ="right", pad = "1") #pads to the right but 1's instead of spaces
+
+
+
+# Locale Sensitive
+
+x <- "I love R!"
+str_to_upper(x) #makes everything uppercase
+
+str_to_lower(x) #makes it lowercase
+
+str_to_title(x) #cap letter of each word
+
+
+
+#Pattern Matching
+
+data <- c("AAA", "TATA", "CTAG", "GCTT")
+str_view(data, pattern = "A") # finds all strings with an A
+
+str_detect(data, pattern = "A") #says if it has A by true or false
+
+str_detect(data, pattern = "AT") #says if it has AT with true or false
+
+str_locate(data, pattern = "AT") #locates a pattern
+
+
+
+#Metacharacters
+
+vals <- c("a.b", "b.c", "c.d")
+str_replace(vals, "\\.", " ") #need the two back slashes to not have R use the . as its metacharacter use, \\ neutralizes metacharacters
+
+vals2 <- c("a.b.c", "b.c.d", "c.d.e")
+str_replace_all(vals2, "\\.", " ") #if there are multple metacharacters needing replacement you use replace_all function
+
+
+
+#Sequences
+val2<-c("test 123", "test 456", "test")
+str_subset(val2, "\\d") #selects strings only with numbers in it
+
+strings<-c("550-153-7578",
+         "banana",
+         "435.114.7586",
+         "home: 672-442-6739")
+
+phone <- "([2-9][0-9]{2})[- .]([0-9]{3})[- .]([0-9]{4})" #tells what to look for to identify a phone number
+
+str_detect(strings, phone)# Which strings contain phone numbers?
+
+test<- str_subset(strings, phone)
+test
+
+test <- str_replace_all(test, "[a-z]", "") %>%
+ str_replace_all("\\.", "-") %>%
+ str_replace(":", "") %>%
+ str_trim()
+
+test
+
+
+
+# Tidytext
+
+head(austen_books())
+
+original_books <- austen_books() %>% #get all of the books
+  group_by(book) %>%
+  mutate(line = row_number(), #find every line
+        chapter = cumsum(str_detect(text, regex("^chapter [\\divxlc]",
+                                                ignore_case = TRUE)))) %>%
+  ungroup()
+
+tidy_books <- original_books %>%
+  unnest_tokens(output = word, input = text)
+
+cleaned_books <- tidy_books %>%
+  anti_join(get_stopwords())
+
+cleaned_books %>%
+  count(word, sort = TRUE)
+
+sent_word_counts <- tidy_books %>%
+  inner_join(get_sentiments()) %>%
+  count(word, sentiment, sort = TRUE)
+
+head(sent_word_counts)[1:3,]
+```
+ 
