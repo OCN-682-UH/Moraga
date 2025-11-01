@@ -1,0 +1,83 @@
+---
+title: "Week_10_Homework"
+author: "Jacquin Moraga"
+format: html
+---
+
+## Load Libraries
+
+```{r}
+#| warning: false
+#| message: false
+
+library(tidyverse)
+library(here)
+```
+
+
+## Load Data
+
+```{r}
+#| warning: false
+#| message: false
+
+chem <- read_csv(here("Week_10","Data","chemicaldata_maunalua.csv"))%>%
+  drop_na() #reads in the data and gets rid of those pesky Na's
+
+view(chem)
+
+
+
+```
+
+
+## Function for a plot
+
+Here is a function that can be used to create a plot using the Maunalua Dataset which looks at the different chemical values compared to the groundwater percentage where the samples were collected at. The color is scaled to represent temperature.
+
+```{r}
+#| warning: false
+#| message: false
+
+Dif_Chem <- function(data = chem, x = percent_sgd, y) { #names the function and then always uses the chem data and has sgd on the x axis
+  ggplot(data, aes(x = percent_sgd, y = {{y}}, color = Temp_in)) + #uses the chem data with sgd on the x and y whatever value is inserted into the function using curly curls to get the data in the data set
+  geom_point() + #good ol point plot
+  scale_color_viridis_c(option = "C") + #fancy colors
+  facet_grid(~Season) + #love me a good facet_grid to split it by season
+  labs( title = "Maunalua Chemicals",
+        subtitle = "Measurements of chemicals within Maunalua survey area",
+        color = "Temperature (Celcius)",
+        x = "Groundwater %") + #renaming stuff
+    theme_bw() #slap on a theme
+}
+  
+
+# Different y values could be: Salinity, Phosphate, Silicate, NN, pH, or TA
+
+Dif_Chem(y = Phosphate) #have fun
+
+  
+```
+
+
+## One that is not a plot
+
+Here is a function that calculates the mean of the same plug in variables that can be used for the plot and shows the mean for each survey season.
+
+```{r}
+#| warning: false
+#| message: false
+
+mean_chem <- function(chemical) { #creating a function that uses any of the "chemical" that were measured in the data, ik they're not chemicals but it just stuck with me cuz of the title of the dataset
+  chem %>% #using the chem dataset I read in
+    group_by(Season) %>% #group it by season to be similar to the plot
+    summarise(
+      mean = mean(.data[[chemical]], na.rm = TRUE), #using the summarize function to get the mean of whatever column header we put into the function
+    )
+}
+
+# Different "Chemicals" could be: Salinity, Phosphate, Silicate, NN, pH, or TA
+
+mean_chem("Phosphate") #behold, averages!
+```
+
