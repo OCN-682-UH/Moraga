@@ -1,0 +1,77 @@
+---
+title: "TidyTuesday1"
+author: "Jacquin Moraga"
+format:
+  html:
+    toc: true
+    css: styles.css
+
+---
+
+## Load Libraries
+
+```{r}
+#| warning: false
+#| message: false
+
+library(tidyverse)
+library(here)
+library(tidytuesdayR)
+```
+
+
+## Load Data
+
+Here is where I loaded in my tidytuesday data using the tidytuesday package. One thing I learned here was using the ifese function when mutating my data which I haven't used for creating any graphs up until this point.I think we've learned this in class so I'm not counting it as the one thing I learned.
+
+```{r}
+#| warning: false
+#| message: false
+
+tuesdata <- tidytuesdayR::tt_load('2025-11-4') #reading in the data
+
+flint_mdeq <- tuesdata$flint_mdeq
+flint_vt <- tuesdata$flint_vt
+
+thresh_vt <-  flint_vt %>%
+  mutate(threshold = ifelse(lead > 15, "Above 15 ppb", "Below 15 ppb"))
+#mutating the data to have assigned phrases in "" assigned to values above and below 15 ppb
+
+
+view(flint_mdeq)
+view(thresh_vt) #I like to view the data
+
+```
+
+
+
+## Data Time
+
+Here I wanted to use a histogram plot since I thought this would be a fun visualization for the data. Honestly I wasn't a fan of the data since it just had sample and lead concentration and thought there would be more to work with but whatever. I learned how to visualize the ifelse I made before with maual color addition to show the number of samples that were above the EPA standard for lead in water.
+```{r}
+#| warning: false
+#| message: false
+
+ggplot(thresh_vt, aes(x = lead, fill = threshold)) + #making a plot with my mutated data
+  geom_histogram(binwidth = 1, color = "white") + #we doin a histogram with bins of 1
+  scale_fill_manual(values = c("Below 15 ppb" = "steelblue", "Above 15 ppb" = "firebrick")) + #manually scaling color to make different colors for the above and below 15 that I created earlier
+  scale_x_continuous(breaks = seq(0, 300, by = 25)) + #scaled the axes to better show the data
+  scale_y_continuous(breaks = seq(0, 60, by = 5)) +
+  labs( #added some titles to everything
+    title = "Frequency of Lead Measurements",
+    subtitle = "How often samples were below or exceed the 15 ppb EPA threshold for safe drinking water",
+    x = "Lead Concentration (ppb)",
+    y = "Number of Samples",
+    fill = "Threshold"
+  ) +
+  theme_bw() #slap on a theme
+
+ggsave(here("Tidy_Tuesday","Output", "TidyTuesday1.png")) #save to output folder
+
+```
+
+
+
+## One thing I learned
+
+If you've made it this far you've probably noticed how my quarto document looks a little different than normal. That's because I learned how to manually edit certain aspects of the document with a text document that's saved in the same folder as this document called styles.css. In there I changed the background color of the quarto doc, colored outlines of code boxes, added shadow to my rendered plot, and changed the text options. Since I am doing a quarto doc for my final project I wanted to learn ways to edit quarto documents so that I can make them better overall.

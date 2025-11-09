@@ -1,0 +1,17 @@
+body {
+  background-color: teal;
+}
+img {
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  border-radius: 4px;
+}
+pre code {
+  background-color: lightgrey;
+  padding: 1em;
+  border-radius: 6px;
+  display: block;
+}
+h1, h2, h3 {
+  font-family: 'Segoe UI', sans-serif;
+  color: darkgrey;
+}
