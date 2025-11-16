@@ -1,0 +1,108 @@
+---
+title: "Tidy Tuesday 2"
+author: "Jacquin Moraga"
+format: html
+---
+
+## Load Libraries
+
+I am using a package I haven't used yet called ggpubr. Originally this wasn't what I was going to do for my tidy Tuesday but I decided to change after finishing my first plot and added this in. I've noticed this is a common package used by students and is good for doing stats with plot. I want to learn to use it more since I will likely using it a lot for my graduate degree.
+
+```{r}
+#| message: false
+#| warning: false
+
+
+library(tidytuesdayR)
+library(tidyverse)
+library(ggpubr)
+library(here)
+```
+
+## Load Data
+
+Using the data from tidy Tuesday 11/11/25 focusing on Tb cases around the world. For this data I will be changing it to just be countries in North America since if I were to use all of the countries in the data set it would be a very chaotic plot.
+
+```{r}
+#| message: false
+#| warning: false
+
+tuesdata <- tidytuesdayR::tt_load('2025-11-11')
+
+who_tb_data <- tuesdata$who_tb_data #load in the tidy Tuesday
+
+americas_tb <- who_tb_data %>%
+  filter(country %in% c("United States of America", "Mexico", "Canada")) #filtering to just be North American countries, world is too many countries to plot
+
+
+
+```
+
+## 1st attempt at something
+
+I saw one of my lab members make a cool looking plot that I tried to replicate using ggplot and I got it sort of close but realized it was not the same. Ive never used an area plot before so that was new but this didn't feel so much like learning a new skill and was just a refresher on things.
+```{r}
+
+
+ggplot(americas_tb, aes(
+  x = year,
+  y = e_mort_num, #setting the x and y axis
+  fill = fct_reorder2(country, year, e_mort_num), #scaling the fill of the area plot to have it layer to be visible
+  color = fct_reorder2(country, year, e_mort_num) #doing the same thing with the lines
+)) +
+  geom_area(alpha = 0.4, size = 1) +  #Making an area plot, setting the transparency to be less and changing the size of the border line
+  scale_fill_manual(values = c( #manually choosing colors for area plot
+    "Mexico" = "darkcyan",
+    "United States of America" = "cyan",
+    "Canada" = "steelblue3"
+  )) +
+  scale_color_manual(values = c( #manually setting the colors of the line
+    "Mexico" = "darkcyan",
+    "United States of America" = "cyan3",
+    "Canada" = "steelblue2"),
+    guide = "none")+
+  labs( # adding labels to the graph
+    title = "Estimated TB Deaths by Year in North America",
+    x = "Year",
+    y = "Estimated TB Deaths",
+    fill = "Country",
+  ) +
+  theme_minimal(base_size = 11) + #changing the size of the text
+  theme( # changing some of the aesthetics
+    plot.title = element_text(face = "bold", size = 18, hjust = 0.5), #editing the title
+    legend.position = "top", #moving the legend up top
+    legend.title = element_text(face = "bold"), #making it bold
+    panel.grid.minor = element_blank() #gets rid of some grid lines
+  )
+
+ggsave(here("Tidy_Tuesday", "Output", "TidyTuesday2a.png"))
+```
+
+## Second Attempt
+
+I looked into it further and found the graph that my lab member made used a different package so I decided I would try it out and make something with ggpubr. I changed it to a box plot because I wanted to include statistical significance with this cool new package and thought a boxplot would allow me to better represent the data and include more elements than my previous graph. This is also a type of plot I will be using for my final project and my degree so it was cool to learn. I will likely be spending a lot of time in the future on tidytuesday further exploring this package.
+
+```{r}
+#| message: false
+#| warning: false
+
+ggboxplot(americas_tb, x = "country", y = "e_mort_num",color = "country",
+          palette = c("Mexico" = "darkcyan",
+                      "United States of America" = "cyan3",
+                      "Canada" = "steelblue3"), #making a plot with ggpubr is slightly different than ggplot but same general idea
+          add = "jitter") + #overlaying a jitter
+  stat_compare_means(label = "p.signif", method = "t.test") + #looking at statistical significance with a t-test
+  labs(
+    title = "Estimated TB Deaths by Country and HIV Status",
+    x = "Country",
+    y = "Estimated TB Deaths") +
+  theme_minimal(base_size = 11) + #making text same size
+  theme( # changing some of the aesthetics
+    plot.title = element_text(face = "bold", size = 18, hjust = 0.5), #editing the title
+    legend.position = "top", #moving the legend up top
+    legend.title = element_text(face = "bold"), #making it bold
+    panel.grid.minor = element_blank()) #gets rid of some grid lines
+  
+ggsave(here("Tidy_Tuesday", "Output", "TidyTuesday2b.png"))
+```
+
