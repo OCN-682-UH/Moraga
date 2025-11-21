@@ -1,0 +1,106 @@
+---
+title: "Week_13b"
+author: "Jacquin Moraga"
+format: html
+---
+
+## Load Libraries
+
+```{r}
+#| warning: false
+#| message: false
+
+library(tidyverse)
+library(here)
+library(palmerpenguins)
+library(broom)
+library(performance) 
+library(modelsummary)
+library(tidymodels)
+```
+
+## Augh Data Stuff
+
+```{r}
+#| warning: false
+#| message: false
+
+#simple linear model
+mod<- lm(y~x, data = df) #read as y is a function of x
+
+#multiple regression
+mod<- lm(y~x1 +x2, data = df)
+
+#Interaction term
+mod<- lm(y~x1*x2, data = df)
+
+Peng_mod<-lm(bill_length_mm ~ bill_depth_mm*species, data = penguins)
+
+print(check_model(Peng_mod))
+
+anova(Peng_mod)
+
+summary(Peng_mod)
+
+results<-glance(Peng_mod)
+results
+
+resid_fitted<-augment(Peng_mod)
+resid_fitted
+```
+
+## ModelSummary
+
+```{r}
+#| warning: false
+#| message: false
+
+Peng_mod_NoX<-lm(bill_length_mm ~ bill_depth_mm, data = penguins)
+
+models<- list("Model with interaction" = Peng_mod,
+              "Model with no interaction" = Peng_mod_NoX)
+
+modelsummary(models, output = here("Week_13","Output","table.docx"))
+```
+
+
+## More Data
+
+```{r}
+#| warning: false
+#| message: false
+
+models <-penguins %>%
+  ungroup()%>%
+  nest(.by = species) %>%
+  mutate(fit = map(data, ~lm(bill_length_mm~body_mass_g, data = .)))
+
+models
+
+results<-models %>%
+  mutate(coeffs = map(fit,tidy),
+         modelresults = map(fit, glance)) %>%
+  select(species, coeffs, modelresults) %>%
+  unnest()
+
+view(results)
+```
+
+
+## Tidy Models
+
+```{r}
+#| warning: false
+#| message: false
+
+linear_reg()
+
+lm_mod <- linear_reg() %>%
+  set_engine("lm") %>%
+  fit(bill_length_mm ~ bill_depth_mm*species, data = penguins) %>%
+  tidy()
+#can pipe from tidy straight into a plot with the normal ggplot stuff
+
+lm_mod
+```
+

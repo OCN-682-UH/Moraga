@@ -1,0 +1,106 @@
+---
+title: "Week_13a"
+author: "Jacquin Moraga"
+format: html
+---
+
+## Libraries
+
+```{r}
+#| warning: false
+#| message: false
+
+library(tidyverse)
+library(here)
+```
+
+## Data
+```{r}
+#| warning: false
+#| message: false
+
+test_data<- read_csv(here("Week_13", "Data", "011521_CT316_1pcal.csv"))
+```
+
+## Make things happen
+```{r}
+#| warning: false
+#| message: false
+
+print(paste("The year is", 2000))
+
+years <- c(2015:2021)
+
+for (i in years){
+  print(paste("The year is", i))
+}
+
+year_data <-tibble(year = rep(NA, length(years)),
+                   year_name = rep(NA, length(years)))
+
+year_data
+
+for (i in 1:length(years)){
+  year_data$year_name[i]<-paste("The year is", years[i])
+  year_data$year[i]<-years[i]
+}
+
+year_data
+
+CondPath<-here("Week_13","Data","cond_data") #point to where to extract on computer
+
+files <- dir(path = CondPath, pattern = ".csv") #makes a path to the location chosen above, selecting just csv files
+
+files
+
+cond_data<- tibble(filename = rep(NA, length(files)),
+                   mean_temp = rep(NA, length(files)),
+                   mean_sal = rep(NA, length(files)))
+
+cond_data
+
+raw_data<- read_csv(paste0(CondPath,"/",files[i]))
+head(raw_data)
+
+for (i in 1:length(files)){
+raw_data<- read_csv(paste0(CondPath,"/",files[i]))
+
+cond_data$filename[i]<-files[i]
+cond_data$mean_temp[i]<-mean(raw_data$Temperature, na.rm = TRUE)
+cond_data$mean_sal[i]<-mean(raw_data$Salinity, na.rm = TRUE)
+}
+
+cond_data
+```
+
+## Loops in the TidyVerse
+
+```{r}
+#| warning: false
+#| message: false
+1:10
+
+1:10 %>%
+  map(rnorm, n =15)
+
+1:10 %>% #this one is easier to understand
+  map(rnorm, n =15) %>%
+  map_dbl(mean)
+
+#or
+
+1:10 %>%
+  map(function(x) rnorm(15,x)) %>%
+  map_dbl(mean)
+
+CondPath<-here("Week_13", "Data", "cond_data")
+files <- dir(path = CondPath,pattern = ".csv")
+
+data<- files %>%
+  set_names()%>%
+  map_df(read_csv,.id = "filename") %>%
+  group_by(filename) %>%
+  summarise(mean_temp = mean(Temperature, na.rm = TRUE),
+            mean_sal = mean(Salinity,na.rm = TRUE))
+```
+
