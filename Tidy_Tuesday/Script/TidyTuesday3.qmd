@@ -1,0 +1,106 @@
+---
+title: "Tidy Tuesday 3"
+author: "Jacquin Moraga"
+format: html
+---
+
+## Load Libraries
+
+```{r}
+#| warning: false
+#| message: false
+
+library(tidytuesdayR)
+library(tidyverse)
+library(tidytext)
+library(ggpubr)
+library(wordcloud)
+library(PNWColors)
+library(here)
+
+```
+
+
+## Load Data
+
+```{r}
+#| warning: false
+#| message: false
+
+tuesdata <- tidytuesdayR::tt_load('2025-11-18')
+
+holmes <- tuesdata$holmes
+
+view(holmes)
+```
+
+
+## Makin the Data
+
+```{r}
+# Total mentions across all books
+
+holmes_words <- holmes %>%
+  unnest_tokens(word, text) %>% # break text into individual words
+  mutate(word = str_to_lower(word)) # make everything lowercase since ill be using names, had a problem when I didn't due this
+
+mentions <- holmes_words %>%
+  filter(word %in% c("holmes", "watson")) %>% #filtered to just be Watson and Holmes
+  count(book, word) #counts how many times the words holmes and watson appear
+
+totals <- mentions %>%
+  group_by(word) %>% #group it by words
+  summarise(total_mentions = sum(n)) #making the names into a number that can be put on an axis
+
+totals
+
+
+```
+
+
+#Visualization
+
+Here I used the ggpubr package to make a box plot where I could use a t-test and see the significance of difference between the two.
+```{r}
+ggboxplot(mentions, x = "word", y = "n",
+          fill = "word", palette = pnw_palette("Bay")) + #assigning the axes and filling
+  stat_compare_means(method = "t.test", 
+                     label = "p.signif") + #running the tests I want
+  labs(title = "Boxplot of Holmes vs Watson Mentions",
+       x = "Character", y = "Mentions per Book", fill = "Name") +# labeling
+  theme(
+    plot.title = element_text(size = 14, face = "bold"),
+    axis.title.x = element_text(size = 12, margin = margin(t = 10)),
+    axis.title.y = element_text(size = 12, margin = margin(t = 10))) #fixing the sizing to be good
+
+ggsave(here("Tidy_Tuesday", "Output", "TidyTuesday3a.png"))
+
+
+```
+
+Crazy how the main character of series has significantly more mentions of his name than his sidekick. 
+
+## A cloud of words
+
+I felt like I didn't really learn a whole new thing since we've already used TidyText and my ggpubr graph was less impressive and difficult than I thought it was going to be so my new thing I learned was making a word cloud which I haven't ever done. I used the package "wordcloud". Don't know if I'll ever use this againn but was interesting to learn how to do this.
+
+```{r}
+
+# Setting up a new data frame for the wordcloud
+holmes_words <- holmes %>%
+  unnest_tokens(word, text) %>% #makes a new column with each word in the text in long format
+  anti_join(stop_words) %>% #gets rid of common word that I don't want
+  count(word, sort = TRUE) # counts the frequency of each word and sorts them by the number of times they appear
+
+# Create word cloud
+wordcloud(words = holmes_words$word, #using the words from the holmes_words data frame, using the words from the "word column"
+          freq = holmes_words$n, #looking at the frequencies words appear to size them in the cloud
+          min.freq = 20, # only show words that have at least 20 mentions
+          max.words = 100,# limits to the top 100 words
+          random.order = FALSE, # put most frequent in center
+          colors = pnw_palette("Bay")) #lovin this color palette
+          
+
+```
+
+Wow Holmes is the most used word, who would've guessed that too.
