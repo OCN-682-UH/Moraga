@@ -1,0 +1,77 @@
+---
+title: "Tidy Tuesday 4"
+author: "Jacquin Moraga"
+format: html
+---
+
+## Load Libraries
+
+```{r}
+#| warning: false
+#| message: false
+
+library(tidytuesdayR)
+library(tidyverse)
+library(GGally)
+library(forcats)
+library(here)
+```
+
+
+## Load Data
+
+```{r}
+#| warning: false
+#| message: false
+
+tuesdata <- tidytuesdayR::tt_load('2025-11-25')
+
+spi_indicators <- tuesdata$spi_indicators
+
+
+new_indicator <- spi_indicators %>%
+  filter(year == 2023) %>% #using only 2023 bc there is too much data otherwise
+  group_by(income)%>% #filtering by income
+  summarize(Data_use_score = mean(data_use_score, na.rm = TRUE), #calculating the means by income for every score type
+            Data_services_score = mean(data_services_score, na.rm = TRUE),
+            Data_products_score = mean(data_products_score, na.rm = TRUE),
+            Data_sources_score = mean(data_sources_score, na.rm = TRUE),
+            Data_infrastructure_score = mean(data_infrastructure_score, na.rm = TRUE)) %>%
+  mutate(income = fct_relevel(income, #adjusting the levels so that they come out right on the legend in my plot
+                              "High income",
+                              "Upper middle income",
+                              "Lower middle income",
+                              "Low income"))
+
+
+view(new_indicator)
+```
+
+
+## Making something cool
+
+I used a new package called GGally to create a parallel coordinates chart I saw on r-gallery. This is a cool, new graph to me where I was able to compare the mean scores of each category across all income groups in the year 2023. This was useful for condensing a lot of information into one visual piece that helps summarize and compare the groups well.
+```{r}
+#| warning: false
+#| message: false
+
+ggparcoord(
+  data = new_indicator, #choosing my edited dataset
+  columns = 2:6,        #selecting which columns of data will de used from the dataset
+  groupColumn = 1,      #selecting which column everything is being grouped by which is the income column
+  scale = "globalminmax") + #sets everything to the same scale based on the total max and min across all the different columns
+  labs(
+    title = "SPI Profiles by Income Group (2023)",
+    x = "SPI Dimensions",
+    y = "Mean Score",
+    color = "Income Group" #adding titles
+  ) +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_text(size = 6, angle = 30, hjust = 1),
+    axis.title.y = element_text(margin = margin(r =15)),
+    ) #adjusting the axis labels so its not so clustered
+
+ggsave(here("Tidy_Tuesday", "Output", "TidyTuesday4.png"))
+```
+
