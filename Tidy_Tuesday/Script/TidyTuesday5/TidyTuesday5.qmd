@@ -1,0 +1,75 @@
+---
+title: "TidyTuesday5"
+format: html
+---
+
+## Load Libraries
+
+```{r}
+#| warning: false
+#| message: false
+
+library(tidyverse)
+library(tidytuesdayR)
+library(plotly)
+library(here)
+```
+
+## Load Data
+
+This week's TidyTuesday looks at an interesting festival in Zurich where a snowman is exploded to determine what the summer weather will be like. For this dataset I made limited changes to the dataset as it wasn't to extensive and didn't need to be shortened or manipulated.
+```{r}
+#| warning: false
+#| message: false
+
+tuesdata <- tidytuesdayR::tt_load('2025-12-02')
+
+snowman_data <- tuesdata$sechselaeuten %>%
+  drop_na(duration) #got rid of NAs for where the duration was not recorded
+
+view(snowman_data)
+```
+
+
+## Plot
+
+I wanted to create a plot that showed the relationship between how long ignition of the snowman took and what the summer temperature was. I used some emojis to help illustrate if record temperatures were hit for each year and made the plot somewhat interactive which I haven't done until this point.
+```{r}
+#| warning: false
+#| message: false
+
+snowman_data$emoji <- ifelse(snowman_data$record == TRUE, "☀️", "") #making the sun emoji replace points for when the record is TRUE using an ifelse statement
+
+
+p <- ggplot(snowman_data, aes(x = duration, y = tre200m0)) + #making a point plot that will be transformed into an interactive plot
+  geom_point(aes(color = tre200m0, #assigning the aesthetics
+    text = paste("Year:", year, #putting text for each point to give information when looking at each one
+                 "<br>Duration:", duration,
+                 "<br>Temp:", tre200m0,
+                 "<br>Record?:", record)
+  ), size = 4, alpha = 0.8) + #changing size and transparency
+  geom_smooth(method = "lm", se = TRUE, color = "black", fill = "lightblue") + #overlaying a regression line to show correlation
+  geom_text(aes(label = emoji), vjust = -1.2, size = 6) + #adding the text so that the emojis will appear
+  scale_color_gradient(limits = c(14, 19), low = "darkblue", high = "orange") + #creating a manual color gradient for temperature values bellow where records are hit
+  labs( #adding titles
+    title = "Ignition Duration vs Average Monthly Temperature",
+    x = "Boeoegg Ignition (Minutes)",
+    y = "Average Monthly Temp (C)",
+    color = "Temperature (C)"
+  ) +
+  theme_minimal() + #adding a theme
+  theme( #changing the text size so it fits better
+    axis.title = element_text(size = 10),
+    title = element_text(size = 10),
+    legend.title = element_text(size = 10),
+    legend.text = element_text(size = 8)
+  )
+
+ggplotly(p, tooltip = "text") #converting my plot to be interactive
+
+ggsave(here("Tidy_Tuesday","Output","TidyTuesday5.png"))
+
+
+
+```
+

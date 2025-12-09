@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.42">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>TidyTuesday5</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="TidyTuesday5_files/libs/clipboard/clipboard.min.js"></script>
+<script src="TidyTuesday5_files/libs/quarto-html/quarto.js"></script>
+<script src="TidyTuesday5_files/libs/quarto-html/popper.min.js"></script>
+<script src="TidyTuesday5_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="TidyTuesday5_files/libs/quarto-html/anchor.min.js"></script>
+<link href="TidyTuesday5_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="TidyTuesday5_files/libs/quarto-html/quarto-syntax-highlighting-2f5df379a58b258e96c21c0638c20c03.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="TidyTuesday5_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="TidyTuesday5_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="TidyTuesday5_files/libs/bootstrap/bootstrap-1bc8a17f135ab3d594c857e9f48e611b.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="TidyTuesday5_files/libs/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet">
+
+<script src="TidyTuesday5_files/libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
+
+<script src="TidyTuesday5_files/libs/plotly-binding-4.11.0/plotly.js"></script>
+
+<script src="TidyTuesday5_files/libs/typedarray-0.1/typedarray.min.js"></script>
+
+<script src="TidyTuesday5_files/libs/jquery-3.5.1/jquery.min.js"></script>
+
+<link href="TidyTuesday5_files/libs/crosstalk-1.2.2/css/crosstalk.min.css" rel="stylesheet">
+
+<script src="TidyTuesday5_files/libs/crosstalk-1.2.2/js/crosstalk.min.js"></script>
+
+<link href="TidyTuesday5_files/libs/plotly-htmlwidgets-css-2.11.1/plotly-htmlwidgets.css" rel="stylesheet">
+
+<script src="TidyTuesday5_files/libs/plotly-main-2.11.1/plotly-latest.min.js"></script>
+
+
+
+</head>
+
+<body class="fullcontent">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">TidyTuesday5</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="load-libraries" class="level2">
+<h2 class="anchored" data-anchor-id="load-libraries">Load Libraries</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidytuesdayR)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(plotly)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(here)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="load-data" class="level2">
+<h2 class="anchored" data-anchor-id="load-data">Load Data</h2>
+<p>This week’s TidyTuesday looks at an interesting festival in Zurich where a snowman is exploded to determine what the summer weather will be like. For this dataset I made limited changes to the dataset as it wasn’t to extensive and didn’t need to be shortened or manipulated.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>tuesdata <span class="ot">&lt;-</span> tidytuesdayR<span class="sc">::</span><span class="fu">tt_load</span>(<span class="st">'2025-12-02'</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>snowman_data <span class="ot">&lt;-</span> tuesdata<span class="sc">$</span>sechselaeuten <span class="sc">%&gt;%</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">drop_na</span>(duration) <span class="co">#got rid of NAs for where the duration was not recorded</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="fu">view</span>(snowman_data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="plot" class="level2">
+<h2 class="anchored" data-anchor-id="plot">Plot</h2>
+<p>I wanted to create a plot that showed the relationship between how long ignition of the snowman took and what the summer temperature was. I used some emojis to help illustrate if record temperatures were hit for each year and made the plot somewhat interactive which I haven’t done until this point.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>snowman_data<span class="sc">$</span>emoji <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(snowman_data<span class="sc">$</span>record <span class="sc">==</span> <span class="cn">TRUE</span>, <span class="st">"☀️"</span>, <span class="st">""</span>) <span class="co">#making the sun emoji replace points for when the record is TRUE using an ifelse statement</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(snowman_data, <span class="fu">aes</span>(<span class="at">x =</span> duration, <span class="at">y =</span> tre200m0)) <span class="sc">+</span> <span class="co">#making a point plot that will be transformed into an interactive plot</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">color =</span> tre200m0, <span class="co">#assigning the aesthetics</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">text =</span> <span class="fu">paste</span>(<span class="st">"Year:"</span>, year, <span class="co">#putting text for each point to give information when looking at each one</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>                 <span class="st">"&lt;br&gt;Duration:"</span>, duration,</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>                 <span class="st">"&lt;br&gt;Temp:"</span>, tre200m0,</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>                 <span class="st">"&lt;br&gt;Record?:"</span>, record)</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  ), <span class="at">size =</span> <span class="dv">4</span>, <span class="at">alpha =</span> <span class="fl">0.8</span>) <span class="sc">+</span> <span class="co">#changing size and transparency</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">se =</span> <span class="cn">TRUE</span>, <span class="at">color =</span> <span class="st">"black"</span>, <span class="at">fill =</span> <span class="st">"lightblue"</span>) <span class="sc">+</span> <span class="co">#overlaying a regression line to show correlation</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="fu">aes</span>(<span class="at">label =</span> emoji), <span class="at">vjust =</span> <span class="sc">-</span><span class="fl">1.2</span>, <span class="at">size =</span> <span class="dv">6</span>) <span class="sc">+</span> <span class="co">#adding the text so that the emojis will appear</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_gradient</span>(<span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">14</span>, <span class="dv">19</span>), <span class="at">low =</span> <span class="st">"darkblue"</span>, <span class="at">high =</span> <span class="st">"orange"</span>) <span class="sc">+</span> <span class="co">#creating a manual color gradient for temperature values bellow where records are hit</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>( <span class="co">#adding titles</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Ignition Duration vs Average Monthly Temperature"</span>,</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Boeoegg Ignition (Minutes)"</span>,</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Average Monthly Temp (C)"</span>,</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"Temperature (C)"</span></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span> <span class="co">#adding a theme</span></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>( <span class="co">#changing the text size so it fits better</span></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">10</span>),</span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">10</span>),</span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">10</span>),</span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">8</span>)</span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplotly</span>(p, <span class="at">tooltip =</span> <span class="st">"text"</span>) <span class="co">#converting my plot to be interactive</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="plotly html-widget html-fill-item" id="htmlwidget-a02baf4861920dfe073c" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-a02baf4861920dfe073c">{"x":{"data":[{"x":[60,6,8,4,8,8,7,20,16,6,5,10,40,5,8,26,5.1200000000000001,22,11,27,12,19,17,14.17,13,24.329999999999998,22,24,14,17,40,24,10.5,12,10.220000000000001,23.5,21.920000000000002,5.8499999999999996,8,7.5,10.220000000000001,23.870000000000001,16.75,26.379999999999999,12.4,5.7000000000000002,11.699999999999999,17.870000000000001,10.470000000000001,12.15,26.02,12.92,12.9,10.93,12.119999999999999,35.18,20.649999999999999,43.57,9.9299999999999997,20.52,17.73,12.949999999999999,37.979999999999997,57,26.5],"y":[16.670000000000002,18.73,16.670000000000002,15.07,17,17.629999999999999,16.469999999999999,15.869999999999999,15.83,16.969999999999999,16.030000000000001,16.129999999999999,17.07,16.969999999999999,15.77,17.399999999999999,16.57,16.530000000000001,17.629999999999999,16.07,15.4,16.300000000000001,15.6,16.530000000000001,17.5,19.07,16.800000000000001,16.800000000000001,16.699999999999999,16.300000000000001,16.93,17.100000000000001,17.530000000000001,18.030000000000001,18.370000000000001,17,19.129999999999999,17.43,17.030000000000001,17.300000000000001,18.07,17.23,17.629999999999999,17.699999999999999,18.399999999999999,21.670000000000002,17.629999999999999,17.629999999999999,18.300000000000001,17.27,17.800000000000001,18.329999999999998,18.030000000000001,17.5,18.300000000000001,18.5,20.170000000000002,18.27,19.530000000000001,20.170000000000002,19.73,17.969999999999999,20.399999999999999,20.07,19.600000000000001],"text":["Year: 1923 <br>Duration: 60 <br>Temp: 16.67 <br>Record?: FALSE","Year: 1952 <br>Duration: 6 <br>Temp: 18.73 <br>Record?: FALSE","Year: 1953 <br>Duration: 8 <br>Temp: 16.67 <br>Record?: FALSE","Year: 1956 <br>Duration: 4 <br>Temp: 15.07 <br>Record?: FALSE","Year: 1958 <br>Duration: 8 <br>Temp: 17 <br>Record?: FALSE","Year: 1959 <br>Duration: 8 <br>Temp: 17.63 <br>Record?: FALSE","Year: 1961 <br>Duration: 7 <br>Temp: 16.47 <br>Record?: FALSE","Year: 1965 <br>Duration: 20 <br>Temp: 15.87 <br>Record?: FALSE","Year: 1966 <br>Duration: 16 <br>Temp: 15.83 <br>Record?: FALSE","Year: 1967 <br>Duration: 6 <br>Temp: 16.97 <br>Record?: FALSE","Year: 1968 <br>Duration: 5 <br>Temp: 16.03 <br>Record?: FALSE","Year: 1969 <br>Duration: 10 <br>Temp: 16.13 <br>Record?: FALSE","Year: 1970 <br>Duration: 40 <br>Temp: 17.07 <br>Record?: FALSE","Year: 1971 <br>Duration: 5 <br>Temp: 16.97 <br>Record?: FALSE","Year: 1972 <br>Duration: 8 <br>Temp: 15.77 <br>Record?: FALSE","Year: 1973 <br>Duration: 26 <br>Temp: 17.4 <br>Record?: FALSE","Year: 1974 <br>Duration: 5.12 <br>Temp: 16.57 <br>Record?: FALSE","Year: 1975 <br>Duration: 22 <br>Temp: 16.53 <br>Record?: FALSE","Year: 1976 <br>Duration: 11 <br>Temp: 17.63 <br>Record?: FALSE","Year: 1977 <br>Duration: 27 <br>Temp: 16.07 <br>Record?: FALSE","Year: 1978 <br>Duration: 12 <br>Temp: 15.4 <br>Record?: FALSE","Year: 1979 <br>Duration: 19 <br>Temp: 16.3 <br>Record?: FALSE","Year: 1980 <br>Duration: 17 <br>Temp: 15.6 <br>Record?: FALSE","Year: 1981 <br>Duration: 14.17 <br>Temp: 16.53 <br>Record?: FALSE","Year: 1982 <br>Duration: 13 <br>Temp: 17.5 <br>Record?: FALSE","Year: 1983 <br>Duration: 24.33 <br>Temp: 19.07 <br>Record?: TRUE","Year: 1984 <br>Duration: 22 <br>Temp: 16.8 <br>Record?: FALSE","Year: 1985 <br>Duration: 24 <br>Temp: 16.8 <br>Record?: FALSE","Year: 1986 <br>Duration: 14 <br>Temp: 16.7 <br>Record?: FALSE","Year: 1987 <br>Duration: 17 <br>Temp: 16.3 <br>Record?: FALSE","Year: 1988 <br>Duration: 40 <br>Temp: 16.93 <br>Record?: FALSE","Year: 1989 <br>Duration: 24 <br>Temp: 17.1 <br>Record?: FALSE","Year: 1990 <br>Duration: 10.5 <br>Temp: 17.53 <br>Record?: FALSE","Year: 1991 <br>Duration: 12 <br>Temp: 18.03 <br>Record?: FALSE","Year: 1992 <br>Duration: 10.22 <br>Temp: 18.37 <br>Record?: FALSE","Year: 1993 <br>Duration: 23.5 <br>Temp: 17 <br>Record?: FALSE","Year: 1994 <br>Duration: 21.92 <br>Temp: 19.13 <br>Record?: TRUE","Year: 1995 <br>Duration: 5.85 <br>Temp: 17.43 <br>Record?: FALSE","Year: 1996 <br>Duration: 8 <br>Temp: 17.03 <br>Record?: FALSE","Year: 1997 <br>Duration: 7.5 <br>Temp: 17.3 <br>Record?: FALSE","Year: 1998 <br>Duration: 10.22 <br>Temp: 18.07 <br>Record?: FALSE","Year: 1999 <br>Duration: 23.87 <br>Temp: 17.23 <br>Record?: FALSE","Year: 2000 <br>Duration: 16.75 <br>Temp: 17.63 <br>Record?: FALSE","Year: 2001 <br>Duration: 26.38 <br>Temp: 17.7 <br>Record?: FALSE","Year: 2002 <br>Duration: 12.4 <br>Temp: 18.4 <br>Record?: FALSE","Year: 2003 <br>Duration: 5.7 <br>Temp: 21.67 <br>Record?: TRUE","Year: 2004 <br>Duration: 11.7 <br>Temp: 17.63 <br>Record?: FALSE","Year: 2005 <br>Duration: 17.87 <br>Temp: 17.63 <br>Record?: FALSE","Year: 2006 <br>Duration: 10.47 <br>Temp: 18.3 <br>Record?: FALSE","Year: 2007 <br>Duration: 12.15 <br>Temp: 17.27 <br>Record?: FALSE","Year: 2008 <br>Duration: 26.02 <br>Temp: 17.8 <br>Record?: FALSE","Year: 2009 <br>Duration: 12.92 <br>Temp: 18.33 <br>Record?: FALSE","Year: 2010 <br>Duration: 12.9 <br>Temp: 18.03 <br>Record?: FALSE","Year: 2011 <br>Duration: 10.93 <br>Temp: 17.5 <br>Record?: FALSE","Year: 2012 <br>Duration: 12.12 <br>Temp: 18.3 <br>Record?: FALSE","Year: 2013 <br>Duration: 35.18 <br>Temp: 18.5 <br>Record?: FALSE","Year: 2015 <br>Duration: 20.65 <br>Temp: 20.17 <br>Record?: TRUE","Year: 2016 <br>Duration: 43.57 <br>Temp: 18.27 <br>Record?: FALSE","Year: 2017 <br>Duration: 9.93 <br>Temp: 19.53 <br>Record?: TRUE","Year: 2018 <br>Duration: 20.52 <br>Temp: 20.17 <br>Record?: TRUE","Year: 2019 <br>Duration: 17.73 <br>Temp: 19.73 <br>Record?: TRUE","Year: 2021 <br>Duration: 12.95 <br>Temp: 17.97 <br>Record?: FALSE","Year: 2022 <br>Duration: 37.98 <br>Temp: 20.4 <br>Record?: TRUE","Year: 2023 <br>Duration: 57 <br>Temp: 20.07 <br>Record?: TRUE","Year: 2025 <br>Duration: 26.5 <br>Temp: 19.6 <br>Record?: TRUE"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":["rgba(171,85,96,1)","rgba(246,155,31,1)","rgba(171,85,96,1)","rgba(102,33,123,1)","rgba(183,96,89,1)","rgba(206,117,74,1)","rgba(163,78,100,1)","rgba(139,58,110,1)","rgba(137,57,111,1)","rgba(182,95,90,1)","rgba(145,64,107,1)","rgba(150,67,106,1)","rgba(186,98,88,1)","rgba(182,95,90,1)","rgba(135,55,112,1)","rgba(198,109,80,1)","rgba(167,81,98,1)","rgba(165,80,98,1)","rgba(206,117,74,1)","rgba(147,65,107,1)","rgba(118,43,118,1)","rgba(156,73,103,1)","rgba(127,50,115,1)","rgba(165,80,98,1)","rgba(202,113,78,1)","rgba(127,127,127,1)","rgba(176,89,93,1)","rgba(176,89,93,1)","rgba(172,86,95,1)","rgba(156,73,103,1)","rgba(181,93,91,1)","rgba(187,99,87,1)","rgba(203,114,77,1)","rgba(221,131,63,1)","rgba(233,143,50,1)","rgba(183,96,89,1)","rgba(127,127,127,1)","rgba(199,110,79,1)","rgba(184,97,88,1)","rgba(194,106,82,1)","rgba(222,132,61,1)","rgba(192,104,84,1)","rgba(206,117,74,1)","rgba(209,120,72,1)","rgba(234,144,49,1)","rgba(127,127,127,1)","rgba(206,117,74,1)","rgba(206,117,74,1)","rgba(230,140,53,1)","rgba(193,105,83,1)","rgba(213,123,70,1)","rgba(231,141,52,1)","rgba(221,131,63,1)","rgba(202,113,78,1)","rgba(230,140,53,1)","rgba(237,147,44,1)","rgba(127,127,127,1)","rgba(229,139,54,1)","rgba(127,127,127,1)","rgba(127,127,127,1)","rgba(127,127,127,1)","rgba(219,129,65,1)","rgba(127,127,127,1)","rgba(127,127,127,1)","rgba(127,127,127,1)"],"opacity":0.80000000000000004,"size":15.118110236220474,"symbol":"circle","line":{"width":1.8897637795275593,"color":["rgba(171,85,96,1)","rgba(246,155,31,1)","rgba(171,85,96,1)","rgba(102,33,123,1)","rgba(183,96,89,1)","rgba(206,117,74,1)","rgba(163,78,100,1)","rgba(139,58,110,1)","rgba(137,57,111,1)","rgba(182,95,90,1)","rgba(145,64,107,1)","rgba(150,67,106,1)","rgba(186,98,88,1)","rgba(182,95,90,1)","rgba(135,55,112,1)","rgba(198,109,80,1)","rgba(167,81,98,1)","rgba(165,80,98,1)","rgba(206,117,74,1)","rgba(147,65,107,1)","rgba(118,43,118,1)","rgba(156,73,103,1)","rgba(127,50,115,1)","rgba(165,80,98,1)","rgba(202,113,78,1)","rgba(127,127,127,1)","rgba(176,89,93,1)","rgba(176,89,93,1)","rgba(172,86,95,1)","rgba(156,73,103,1)","rgba(181,93,91,1)","rgba(187,99,87,1)","rgba(203,114,77,1)","rgba(221,131,63,1)","rgba(233,143,50,1)","rgba(183,96,89,1)","rgba(127,127,127,1)","rgba(199,110,79,1)","rgba(184,97,88,1)","rgba(194,106,82,1)","rgba(222,132,61,1)","rgba(192,104,84,1)","rgba(206,117,74,1)","rgba(209,120,72,1)","rgba(234,144,49,1)","rgba(127,127,127,1)","rgba(206,117,74,1)","rgba(206,117,74,1)","rgba(230,140,53,1)","rgba(193,105,83,1)","rgba(213,123,70,1)","rgba(231,141,52,1)","rgba(221,131,63,1)","rgba(202,113,78,1)","rgba(230,140,53,1)","rgba(237,147,44,1)","rgba(127,127,127,1)","rgba(229,139,54,1)","rgba(127,127,127,1)","rgba(127,127,127,1)","rgba(127,127,127,1)","rgba(219,129,65,1)","rgba(127,127,127,1)","rgba(127,127,127,1)","rgba(127,127,127,1)"]}},"hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[4,4.7088607594936711,5.4177215189873422,6.1265822784810124,6.8354430379746836,7.5443037974683547,8.2531645569620249,8.962025316455696,9.6708860759493671,10.379746835443038,11.088607594936709,11.797468354430379,12.50632911392405,13.215189873417721,13.924050632911392,14.632911392405063,15.341772151898734,16.050632911392405,16.759493670886076,17.468354430379748,18.177215189873419,18.88607594936709,19.594936708860757,20.303797468354432,21.0126582278481,21.721518987341771,22.430379746835442,23.139240506329113,23.848101265822784,24.556962025316455,25.265822784810126,25.974683544303797,26.683544303797468,27.39240506329114,28.101265822784811,28.810126582278482,29.518987341772153,30.227848101265824,30.936708860759495,31.645569620253166,32.354430379746837,33.063291139240505,33.77215189873418,34.481012658227847,35.189873417721515,35.898734177215189,36.607594936708864,37.316455696202532,38.025316455696199,38.734177215189874,39.443037974683541,40.151898734177216,40.860759493670884,41.569620253164558,42.278481012658226,42.9873417721519,43.696202531645568,44.405063291139243,45.11392405063291,45.822784810126585,46.531645569620252,47.240506329113927,47.949367088607595,48.658227848101269,49.367088607594937,50.075949367088604,50.784810126582279,51.493670886075947,52.202531645569621,52.911392405063289,53.620253164556964,54.329113924050631,55.037974683544306,55.746835443037973,56.455696202531648,57.164556962025316,57.87341772151899,58.582278481012658,59.291139240506332,60],"y":[17.269710912755201,17.285142212006534,17.30057351125787,17.316004810509202,17.331436109760535,17.346867409011868,17.362298708263204,17.377730007514536,17.393161306765869,17.408592606017201,17.424023905268534,17.43945520451987,17.454886503771203,17.470317803022535,17.485749102273868,17.5011804015252,17.516611700776537,17.532043000027869,17.547474299279202,17.562905598530534,17.57833689778187,17.593768197033203,17.609199496284536,17.624630795535868,17.640062094787201,17.655493394038537,17.670924693289869,17.686355992541202,17.701787291792535,17.717218591043871,17.732649890295203,17.748081189546536,17.763512488797868,17.778943788049201,17.794375087300537,17.80980638655187,17.825237685803202,17.840668985054535,17.856100284305867,17.871531583557204,17.886962882808536,17.902394182059869,17.917825481311201,17.933256780562537,17.94868807981387,17.964119379065203,17.979550678316535,17.994981977567868,18.010413276819204,18.025844576070536,18.041275875321869,18.056707174573202,18.072138473824538,18.08756977307587,18.103001072327203,18.118432371578535,18.133863670829868,18.149294970081204,18.164726269332537,18.180157568583869,18.195588867835202,18.211020167086538,18.22645146633787,18.241882765589203,18.257314064840536,18.272745364091868,18.288176663343204,18.303607962594537,18.31903926184587,18.334470561097202,18.349901860348535,18.365333159599871,18.380764458851203,18.396195758102536,18.411627057353869,18.427058356605201,18.442489655856537,18.45792095510787,18.473352254359202,18.488783553610535],"text":"","type":"scatter","mode":"lines","name":"fitted values","line":{"width":3.7795275590551185,"color":"rgba(0,0,0,1)","dash":"solid"},"hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[4,4.7088607594936711,5.4177215189873422,6.1265822784810124,6.8354430379746836,7.5443037974683547,8.2531645569620249,8.962025316455696,9.6708860759493671,10.379746835443038,11.088607594936709,11.797468354430379,12.50632911392405,13.215189873417721,13.924050632911392,14.632911392405063,15.341772151898734,16.050632911392405,16.759493670886076,17.468354430379748,18.177215189873419,18.88607594936709,19.594936708860757,20.303797468354432,21.0126582278481,21.721518987341771,22.430379746835442,23.139240506329113,23.848101265822784,24.556962025316455,25.265822784810126,25.974683544303797,26.683544303797468,27.39240506329114,28.101265822784811,28.810126582278482,29.518987341772153,30.227848101265824,30.936708860759495,31.645569620253166,32.354430379746837,33.063291139240505,33.77215189873418,34.481012658227847,35.189873417721515,35.898734177215189,36.607594936708864,37.316455696202532,38.025316455696199,38.734177215189874,39.443037974683541,40.151898734177216,40.860759493670884,41.569620253164558,42.278481012658226,42.9873417721519,43.696202531645568,44.405063291139243,45.11392405063291,45.822784810126585,46.531645569620252,47.240506329113927,47.949367088607595,48.658227848101269,49.367088607594937,50.075949367088604,50.784810126582279,51.493670886075947,52.202531645569621,52.911392405063289,53.620253164556964,54.329113924050631,55.037974683544306,55.746835443037973,56.455696202531648,57.164556962025316,57.87341772151899,58.582278481012658,59.291139240506332,60,60,60,59.291139240506332,58.582278481012658,57.87341772151899,57.164556962025316,56.455696202531648,55.746835443037973,55.037974683544306,54.329113924050631,53.620253164556964,52.911392405063289,52.202531645569621,51.493670886075947,50.784810126582279,50.075949367088604,49.367088607594937,48.658227848101269,47.949367088607595,47.240506329113927,46.531645569620252,45.822784810126585,45.11392405063291,44.405063291139243,43.696202531645568,42.9873417721519,42.278481012658226,41.569620253164558,40.860759493670884,40.151898734177216,39.443037974683541,38.734177215189874,38.025316455696199,37.316455696202532,36.607594936708864,35.898734177215189,35.189873417721515,34.481012658227847,33.77215189873418,33.063291139240505,32.354430379746837,31.645569620253166,30.936708860759495,30.227848101265824,29.518987341772153,28.810126582278482,28.101265822784811,27.39240506329114,26.683544303797468,25.974683544303797,25.265822784810126,24.556962025316455,23.848101265822784,23.139240506329113,22.430379746835442,21.721518987341771,21.0126582278481,20.303797468354432,19.594936708860757,18.88607594936709,18.177215189873419,17.468354430379748,16.759493670886076,16.050632911392405,15.341772151898734,14.632911392405063,13.924050632911392,13.215189873417721,12.50632911392405,11.797468354430379,11.088607594936709,10.379746835443038,9.6708860759493671,8.962025316455696,8.2531645569620249,7.5443037974683547,6.8354430379746836,6.1265822784810124,5.4177215189873422,4.7088607594936711,4,4],"y":[16.771033120553987,16.801139110548093,16.830884302219278,16.860234700659511,16.889153030662211,16.917598565325086,16.945527011356045,16.972890479300268,16.999637573115884,17.025713639023596,17.051061216966403,17.075620737427748,17.09933149944408,17.122132950050577,17.143966259440376,17.164776149841639,17.184512892399567,17.203134341614586,17.220607840748748,17.236911814963346,17.252036880595455,17.265986341851352,17.278776014921227,17.29043340092419,17.30099630592991,17.310511062808672,17.31903053643676,17.326612089920008,17.333315661408207,17.339202059127292,17.344331537026157,17.34876267301102,17.352551540665491,17.355751144905689,17.358411081204949,17.36057737469908,17.362292457240745,17.363595245171009,17.364521286581844,17.365102953047977,17.365369656553881,17.365348077307935,17.365062392218867,17.364534497039401,17.363784217655446,17.362829507839102,17.361686632114171,17.360370333316673,17.358893985064885,17.357269729762297,17.355508603003251,17.353620645382275,17.351615002759669,17.349500016033772,17.347283301433738,17.344971822288919,17.342571953161983,17.340089537158647,17.33752993715246,17.334898081590584,17.332198505477987,17.329435387074035,17.326612580777095,17.323733646619949,17.320801876751151,17.317820319234883,17.314791799463837,17.311718939445786,17.30860417519472,17.305449772430794,17.302257840769958,17.299030346563598,17.295769124530096,17.292475888304374,17.28915224001712,17.285799679003031,17.282419609726333,17.27901334900211,17.275582132583455,17.27212712117673,17.27212712117673,19.70543998604434,19.671122376134949,19.63682856121363,19.602559701986742,19.568317034207372,19.534101874690617,19.499915627900698,19.46575979317231,19.431635972636144,19.397545879927112,19.36349134976361,19.329474348497019,19.295496985743288,19.261561527222572,19.227670408948853,19.19382625292992,19.160031884558457,19.126290351898646,19.092604947099041,19.058979230192417,19.025417055577154,18.991922601512613,18.958500403003761,18.925155388497753,18.891892920868152,18.858718843220668,18.825639530117968,18.792661944889407,18.759793703764128,18.727043147640487,18.694419422378775,18.661932568573523,18.629593621819062,18.597414724518899,18.565409250291303,18.533591941972293,18.501979064085674,18.470588570403535,18.439440286811802,18.408556109063191,18.37796021406643,18.34767928202989,18.317742724938061,18.28818291436566,18.259035398404659,18.230339093396125,18.202136431192713,18.174473436930246,18.147399706082052,18.120968243564249,18.09523512296045,18.070258922176862,18.046099895162396,18.022818850142979,18.000475725268402,17.979127883644491,17.958828190147546,17.939622977647844,17.921550052215053,17.904636914968286,17.888899382097723,17.874340757809655,17.860951658441152,17.848710509153506,17.837584653208761,17.82753194510736,17.818502655994493,17.810441508098325,17.803289671611992,17.796986593570665,17.791471573010806,17.786685040415854,17.782569535728804,17.779070405170362,17.776136252698649,17.773719188858859,17.771774920358894,17.770262720296461,17.769145313464975,17.768388704956415,16.771033120553987],"text":"","type":"scatter","mode":"lines","line":{"width":3.7795275590551185,"color":"rgba(0,0,0,0.4)","dash":"solid"},"fill":"toself","fillcolor":"rgba(173,216,230,0.4)","hoveron":"points","hoverinfo":"x+y","showlegend":false,"xaxis":"x","yaxis":"y","frame":null},{"x":[60,6,8,4,8,8,7,20,16,6,5,10,40,5,8,26,5.1200000000000001,22,11,27,12,19,17,14.17,13,24.329999999999998,22,24,14,17,40,24,10.5,12,10.220000000000001,23.5,21.920000000000002,5.8499999999999996,8,7.5,10.220000000000001,23.870000000000001,16.75,26.379999999999999,12.4,5.7000000000000002,11.699999999999999,17.870000000000001,10.470000000000001,12.15,26.02,12.92,12.9,10.93,12.119999999999999,35.18,20.649999999999999,43.57,9.9299999999999997,20.52,17.73,12.949999999999999,37.979999999999997,57,26.5],"y":[16.670000000000002,18.73,16.670000000000002,15.07,17,17.629999999999999,16.469999999999999,15.869999999999999,15.83,16.969999999999999,16.030000000000001,16.129999999999999,17.07,16.969999999999999,15.77,17.399999999999999,16.57,16.530000000000001,17.629999999999999,16.07,15.4,16.300000000000001,15.6,16.530000000000001,17.5,19.07,16.800000000000001,16.800000000000001,16.699999999999999,16.300000000000001,16.93,17.100000000000001,17.530000000000001,18.030000000000001,18.370000000000001,17,19.129999999999999,17.43,17.030000000000001,17.300000000000001,18.07,17.23,17.629999999999999,17.699999999999999,18.399999999999999,21.670000000000002,17.629999999999999,17.629999999999999,18.300000000000001,17.27,17.800000000000001,18.329999999999998,18.030000000000001,17.5,18.300000000000001,18.5,20.170000000000002,18.27,19.530000000000001,20.170000000000002,19.73,17.969999999999999,20.399999999999999,20.07,19.600000000000001],"text":["","","","","","","","","","","","","","","","","","","","","","","","","","☀️","","","","","","","","","","","☀️","","","","","","","","","☀️","","","","","","","","","","","☀️","","☀️","☀️","☀️","","☀️","☀️","☀️"],"hovertext":["","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","",""],"textfont":{"size":22.677165354330711,"color":"rgba(0,0,0,1)"},"type":"scatter","mode":"text","hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[20],"y":[16],"name":"ce0354c57cae8c015ba2a4b653fdc4e2","type":"scatter","mode":"markers","opacity":0,"hoverinfo":"skip","showlegend":false,"marker":{"color":[0,1],"colorscale":[[0,"#00008B"],[0.0033444816053510352,"#06008B"],[0.0066889632107024252,"#0C018B"],[0.01003344481605346,"#11018A"],[0.01337792642140485,"#15018A"],[0.016722408026755887,"#18018A"],[0.02006688963210692,"#1B028A"],[0.02341137123745831,"#1E0289"],[0.026755852842809347,"#200289"],[0.030100334448160383,"#230389"],[0.033444816053511774,"#250389"],[0.03678929765886281,"#270388"],[0.0401337792642142,"#290488"],[0.04347826086956523,"#2B0488"],[0.046822742474916267,"#2D0588"],[0.050167224080267657,"#2F0587"],[0.053511705685618693,"#300687"],[0.05685618729096973,"#320687"],[0.06020066889632112,"#340787"],[0.063545150501672157,"#350786"],[0.066889632107023547,"#370886"],[0.070234113712374577,"#380886"],[0.07357859531772562,"#3A0986"],[0.076923076923077011,"#3B0985"],[0.08026755852842804,"#3C0A85"],[0.083612040133779431,"#3E0B85"],[0.08695652173913046,"#3F0B85"],[0.090301003344481504,"#400C84"],[0.093645484949832894,"#420C84"],[0.096989966555183924,"#430D84"],[0.10033444816053497,"#440E84"],[0.10367892976588636,"#450E83"],[0.10702341137123739,"#460F83"],[0.11036789297658878,"#480F83"],[0.11371237458193981,"#491083"],[0.11705685618729085,"#4A1082"],[0.12040133779264224,"#4B1182"],[0.12374581939799327,"#4C1282"],[0.12709030100334431,"#4D1282"],[0.1304347826086957,"#4E1381"],[0.13377926421404673,"#4F1381"],[0.13712374581939812,"#501481"],[0.14046822742474915,"#511481"],[0.14381270903010018,"#521580"],[0.14715719063545157,"#541680"],[0.15050167224080263,"#551680"],[0.15384615384615402,"#561780"],[0.15719063545150505,"#57177F"],[0.16053511705685608,"#57187F"],[0.16387959866220747,"#58187F"],[0.1672240802675585,"#59197F"],[0.17056856187290953,"#5A197E"],[0.17391304347826092,"#5B1A7E"],[0.17725752508361198,"#5C1B7E"],[0.18060200668896337,"#5D1B7E"],[0.1839464882943144,"#5E1C7D"],[0.18729096989966543,"#5F1C7D"],[0.19063545150501682,"#601D7D"],[0.19397993311036785,"#611D7D"],[0.19732441471571888,"#621E7C"],[0.20066889632107027,"#631E7C"],[0.20401337792642132,"#631F7C"],[0.20735785953177271,"#641F7C"],[0.21070234113712374,"#65207B"],[0.21404682274247477,"#66217B"],[0.21739130434782616,"#67217B"],[0.22073578595317719,"#68227B"],[0.22408026755852858,"#69227A"],[0.22742474916387961,"#69237A"],[0.23076923076923067,"#6A237A"],[0.23411371237458206,"#6B247A"],[0.23745819397993309,"#6C2479"],[0.24080267558528412,"#6D2579"],[0.24414715719063551,"#6E2579"],[0.24749163879598654,"#6E2678"],[0.25083612040133796,"#6F2678"],[0.25418060200668896,"#702778"],[0.25752508361204002,"#712878"],[0.26086956521739141,"#722877"],[0.26421404682274241,"#722977"],[0.26755852842809347,"#732977"],[0.27090301003344486,"#742A77"],[0.27424749163879591,"#752A76"],[0.27759197324414731,"#762B76"],[0.28093645484949831,"#762B76"],[0.28428093645484936,"#772C76"],[0.28762541806020075,"#782C75"],[0.29096989966555176,"#792D75"],[0.29431438127090315,"#792E75"],[0.2976588628762542,"#7A2E75"],[0.30100334448160526,"#7B2F74"],[0.30434782608695665,"#7C2F74"],[0.30769230769230765,"#7C3074"],[0.31103678929765871,"#7D3073"],[0.3143812709030101,"#7E3173"],[0.3177257525083611,"#7F3173"],[0.32107023411371216,"#7F3273"],[0.32441471571906355,"#803272"],[0.32775919732441461,"#813372"],[0.331103678929766,"#823472"],[0.334448160535117,"#823472"],[0.33779264214046806,"#833571"],[0.34113712374581945,"#843571"],[0.34448160535117045,"#853671"],[0.34782608695652184,"#853670"],[0.3511705685618729,"#863770"],[0.35451505016722396,"#873770"],[0.35785953177257535,"#873870"],[0.36120401337792635,"#88386F"],[0.36454849498327774,"#89396F"],[0.3678929765886288,"#8A396F"],[0.3712374581939798,"#8A3A6E"],[0.37458193979933119,"#8B3B6E"],[0.37792642140468224,"#8C3B6E"],[0.3812709030100333,"#8C3C6E"],[0.38461538461538469,"#8D3C6D"],[0.38795986622073569,"#8E3D6D"],[0.39130434782608675,"#8E3D6D"],[0.39464882943143814,"#8F3E6C"],[0.39799331103678914,"#903E6C"],[0.40133779264214053,"#913F6C"],[0.40468227424749159,"#913F6C"],[0.40802675585284265,"#92406B"],[0.41137123745819365,"#93416B"],[0.41471571906354543,"#93416B"],[0.41806020066889643,"#94426A"],[0.42140468227424749,"#95426A"],[0.42474916387959849,"#95436A"],[0.42809364548494955,"#96436A"],[0.43143812709030127,"#974469"],[0.43478260869565233,"#974469"],[0.43812709030100339,"#984569"],[0.44147157190635439,"#994568"],[0.44481605351170544,"#994668"],[0.44816053511705717,"#9A4768"],[0.45150501672240823,"#9B4767"],[0.45484949832775923,"#9B4867"],[0.45819397993311028,"#9C4867"],[0.46153846153846134,"#9D4967"],[0.46488294314381307,"#9D4966"],[0.46822742474916412,"#9E4A66"],[0.47157190635451512,"#9F4A66"],[0.47491638795986618,"#9F4B65"],[0.47826086956521718,"#A04C65"],[0.48160535117056824,"#A14C65"],[0.48494983277591996,"#A14D64"],[0.48829431438127102,"#A24D64"],[0.49163879598662208,"#A34E64"],[0.49498327759197308,"#A34E63"],[0.49832775919732414,"#A44F63"],[0.50167224080267592,"#A54F63"],[0.50501672240802686,"#A55063"],[0.50836120401337792,"#A65162"],[0.51170568561872898,"#A65162"],[0.51505016722408004,"#A75262"],[0.51839464882943109,"#A85261"],[0.52173913043478282,"#A85361"],[0.52508361204013387,"#A95361"],[0.52842809364548482,"#AA5460"],[0.53177257525083588,"#AA5460"],[0.53511705685618693,"#AB5560"],[0.53846153846153866,"#AC565F"],[0.54180602006688972,"#AC565F"],[0.54515050167224077,"#AD575F"],[0.54849498327759183,"#AE575E"],[0.55183946488294278,"#AE585E"],[0.55518394648829461,"#AF585E"],[0.55852842809364556,"#AF595D"],[0.56187290969899661,"#B0595D"],[0.56521739130434767,"#B15A5D"],[0.56856187290969873,"#B15B5C"],[0.57190635451505045,"#B25B5C"],[0.57525083612040151,"#B35C5C"],[0.57859531772575257,"#B35C5B"],[0.58193979933110351,"#B45D5B"],[0.58528428093645457,"#B45D5B"],[0.58862876254180629,"#B55E5A"],[0.59197324414715735,"#B65E5A"],[0.59531772575250841,"#B65F5A"],[0.59866220735785947,"#B76059"],[0.60200668896321052,"#B86059"],[0.60535117056856225,"#B86158"],[0.6086956521739133,"#B96158"],[0.61204013377926425,"#B96258"],[0.61538461538461531,"#BA6257"],[0.61872909698996637,"#BB6357"],[0.62207357859531742,"#BB6357"],[0.62541806020066915,"#BC6456"],[0.6287625418060202,"#BD6556"],[0.63210702341137126,"#BD6556"],[0.63545150501672221,"#BE6655"],[0.63879598662207326,"#BE6655"],[0.64214046822742432,"#BF6754"],[0.64548494983277604,"#C06754"],[0.6488294314381271,"#C06854"],[0.65217391304347816,"#C16953"],[0.65551839464882922,"#C26953"],[0.65886287625418016,"#C26A53"],[0.662207357859532,"#C36A52"],[0.66555183946488294,"#C36B52"],[0.668896321070234,"#C46B51"],[0.67224080267558506,"#C56C51"],[0.67558528428093612,"#C56D51"],[0.67892976588628784,"#C66D50"],[0.6822742474916389,"#C66E50"],[0.68561872909698995,"#C76E4F"],[0.6889632107023409,"#C86F4F"],[0.69230769230769196,"#C86F4F"],[0.69565217391304368,"#C9704E"],[0.69899665551839474,"#C9714E"],[0.7023411371237458,"#CA714D"],[0.70568561872909685,"#CB724D"],[0.70903010033444791,"#CB724C"],[0.71237458193979963,"#CC734C"],[0.71571906354515069,"#CD734C"],[0.71906354515050164,"#CD744B"],[0.72240802675585269,"#CE754B"],[0.72575250836120375,"#CE754A"],[0.72909698996655548,"#CF764A"],[0.73244147157190653,"#D07649"],[0.73578595317725759,"#D07749"],[0.73913043478260865,"#D17748"],[0.74247491638795959,"#D17848"],[0.74581939799331143,"#D27948"],[0.74916387959866237,"#D37947"],[0.75250836120401343,"#D37A47"],[0.75585284280936449,"#D47A46"],[0.75919732441471555,"#D47B46"],[0.7625418060200666,"#D57B45"],[0.76588628762541833,"#D67C45"],[0.76923076923076938,"#D67D44"],[0.77257525083612033,"#D77D44"],[0.77591973244147139,"#D77E43"],[0.77926421404682245,"#D87E43"],[0.7826086956521735,"#D97F42"],[0.78595317725752523,"#D97F42"],[0.78929765886287628,"#DA8041"],[0.79264214046822734,"#DA8141"],[0.79598662207357829,"#DB8140"],[0.79933110367892934,"#DC8240"],[0.80267558528428107,"#DC823F"],[0.80602006688963213,"#DD833F"],[0.80936454849498318,"#DD833E"],[0.81270903010033424,"#DE843E"],[0.8160535117056853,"#DF853D"],[0.81939799331103702,"#DF853C"],[0.82274247491638808,"#E0863C"],[0.82608695652173902,"#E0863B"],[0.82943143812709008,"#E1873B"],[0.83277591973244114,"#E2883A"],[0.83612040133779286,"#E28839"],[0.83946488294314392,"#E38939"],[0.84280936454849498,"#E38938"],[0.84615384615384603,"#E48A38"],[0.84949832775919698,"#E48A37"],[0.85284280936454882,"#E58B36"],[0.85618729096989976,"#E68C36"],[0.85953177257525082,"#E68C35"],[0.86287625418060188,"#E78D34"],[0.86622073578595293,"#E78D34"],[0.86956521739130466,"#E88E33"],[0.87290969899665571,"#E98F32"],[0.87625418060200677,"#E98F32"],[0.87959866220735772,"#EA9031"],[0.88294314381270878,"#EA9030"],[0.8862876254180605,"#EB9130"],[0.88963210702341156,"#EC912F"],[0.89297658862876261,"#EC922E"],[0.89632107023411367,"#ED932D"],[0.89966555183946473,"#ED932C"],[0.90301003344481645,"#EE942C"],[0.90635451505016673,"#EF942B"],[0.90969899665551845,"#EF952A"],[0.91304347826086951,"#F09629"],[0.91638795986622057,"#F09628"],[0.91973244147157163,"#F19727"],[0.92307692307692268,"#F19726"],[0.92642140468227441,"#F29825"],[0.92976588628762546,"#F39924"],[0.93311036789297641,"#F39923"],[0.93645484949832747,"#F49A22"],[0.93979933110367853,"#F49A21"],[0.94314381270903025,"#F59B20"],[0.94648829431438131,"#F69B1F"],[0.94983277591973236,"#F69C1E"],[0.95317725752508342,"#F79D1D"],[0.95652173913043437,"#F79D1B"],[0.9598662207357862,"#F89E1A"],[0.96321070234113715,"#F99E19"],[0.96655518394648821,"#F99F17"],[0.96989966555183926,"#FAA015"],[0.97324414715719032,"#FAA014"],[0.97658862876254204,"#FBA112"],[0.9799331103678931,"#FBA110"],[0.98327759197324416,"#FCA20E"],[0.9866220735785951,"#FDA30B"],[0.98996655518394616,"#FDA309"],[0.99331103678929789,"#FEA406"],[0.99665551839464894,"#FEA403"],[1,"#FFA500"]],"colorbar":{"bgcolor":null,"bordercolor":null,"borderwidth":0,"thickness":23.039999999999996,"title":"Temperature (C)","titlefont":{"color":"rgba(0,0,0,1)","family":"","size":13.283520132835198},"tickmode":"array","ticktext":["14","15","16","17","18","19"],"tickvals":[0.0016666666666666668,0.20100000000000001,0.40033333333333332,0.59966666666666668,0.79900000000000004,0.99833333333333329],"tickfont":{"color":"rgba(0,0,0,1)","family":"","size":10.62681610626816},"ticklen":2,"len":0.5}},"xaxis":"x","yaxis":"y","frame":null}],"layout":{"margin":{"t":39.246160232461605,"r":7.3059360730593621,"b":35.931921959319219,"l":35.931921959319226},"paper_bgcolor":"rgba(255,255,255,1)","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724},"title":{"text":"Ignition Duration vs Average Monthly Temperature","font":{"color":"rgba(0,0,0,1)","family":"","size":15.940224159402243},"x":0,"xref":"paper"},"xaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[1.1999999999999997,62.799999999999997],"tickmode":"array","ticktext":["20","40","60"],"tickvals":[20,40,60],"categoryorder":"array","categoryarray":["20","40","60"],"nticks":null,"ticks":"","tickcolor":null,"ticklen":3.6529680365296811,"tickwidth":0,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.68949771689498},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(235,235,235,1)","gridwidth":0,"zeroline":false,"anchor":"y","title":{"text":"Boeoegg Ignition (Minutes)","font":{"color":"rgba(0,0,0,1)","family":"","size":13.283520132835198}},"hoverformat":".2f"},"yaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[14.74,22],"tickmode":"array","ticktext":["16","18","20","22"],"tickvals":[16,18,20,22],"categoryorder":"array","categoryarray":["16","18","20","22"],"nticks":null,"ticks":"","tickcolor":null,"ticklen":3.6529680365296811,"tickwidth":0,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.68949771689498},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(235,235,235,1)","gridwidth":0,"zeroline":false,"anchor":"x","title":{"text":"Average Monthly Temp (C)","font":{"color":"rgba(0,0,0,1)","family":"","size":13.283520132835198}},"hoverformat":".2f"},"shapes":[{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","layer":"below","x0":0,"x1":1,"y0":0,"y1":1}],"showlegend":false,"legend":{"bgcolor":null,"bordercolor":null,"borderwidth":0,"font":{"color":"rgba(0,0,0,1)","family":"","size":10.62681610626816},"title":{"text":"Temperature (C)","font":{"color":"rgba(0,0,0,1)","family":"","size":13.283520132835198}}},"hovermode":"closest","barmode":"relative"},"config":{"doubleClick":"reset","modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"source":"A","attrs":{"68f4627738c3":{"x":{},"y":{},"colour":{},"text":{},"type":"scatter"},"68f45736364e":{"x":{},"y":{}},"68f44e627802":{"x":{},"y":{},"label":{}}},"cur_data":"68f4627738c3","visdat":{"68f4627738c3":["function (y) ","x"],"68f45736364e":["function (y) ","x"],"68f44e627802":["function (y) ","x"]},"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+</div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="fu">here</span>(<span class="st">"Tidy_Tuesday"</span>,<span class="st">"Output"</span>,<span class="st">"TidyTuesday5.png"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
